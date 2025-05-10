@@ -1,22 +1,264 @@
-[
-  {
-    "text": "Choose the correct sentence:",
-    "choices": [
-      "He don’t like pizza.",
-      "He doesn’t likes pizza.",
-      "He doesn’t like pizza.",
-      "He not likes pizza."
-    ],
-    "answer": "He doesn’t like pizza."
-  },
-  {
-    "text": "The manager asked us to __ the new system before next Monday.",
-    "choices": [
-      "review",
-      "cancel",
-      "repair",
-      "ignore"
-    ],
-    "answer": "review"
-  }
-]
+{
+  "standalone": [
+    {
+      "text": "Choose the correct sentence:",
+      "choices": [
+        "He don’t like pizza.",
+        "He doesn’t likes pizza.",
+        "He doesn’t like pizza.",
+        "He not likes pizza."
+      ],
+      "answer": "He doesn’t like pizza."
+    },
+    {
+      "text": "Emma usually leaves the office at 6 p.m., but today she stayed until 8 to finish a report.",
+      "question": "Why did Emma stay late?",
+      "choices": [
+        "She had a meeting",
+        "She wanted overtime",
+        "She was talking to a coworker",
+        "She was finishing a report"
+      ],
+      "answer": "She was finishing a report"
+    },
+    {
+      "text": "She __ in this company for five years.",
+      "choices": [
+        "work",
+        "worked",
+        "has worked",
+        "working"
+      ],
+      "answer": "has worked"
+    },
+    {
+      "text": "We are looking for someone who is __ and can work independently.",
+      "choices": [
+        "dependable",
+        "dependent",
+        "depend",
+        "depending"
+      ],
+      "answer": "dependable"
+    },
+    {
+      "text": "They postponed the event __ the weather forecast.",
+      "choices": [
+        "because",
+        "although",
+        "but",
+        "so"
+      ],
+      "answer": "because"
+    },
+    {
+      "text": "Please send the report to me __ email.",
+      "choices": [
+        "by",
+        "on",
+        "in",
+        "through"
+      ],
+      "answer": "by"
+    },
+    {
+      "text": "The presentation was __ than I expected.",
+      "choices": [
+        "interesting",
+        "more interesting",
+        "most interesting",
+        "interest"
+      ],
+      "answer": "more interesting"
+    },
+    {
+      "text": "I will contact you __ I arrive at the airport.",
+      "choices": [
+        "since",
+        "when",
+        "during",
+        "for"
+      ],
+      "answer": "when"
+    },
+    {
+      "text": "He __ the team meeting yesterday.",
+      "choices": [
+        "attending",
+        "attend",
+        "attended",
+        "attends"
+      ],
+      "answer": "attended"
+    }
+  ],
+  "passages": [
+    {
+      "passage": "Plastic pollution in the oceans has reached alarming levels. Millions of tons of plastic waste are dumped into the sea every year, threatening marine life. Sea turtles, for example, often mistake plastic bags for jellyfish and ingest them, leading to injury or death.",
+      "questions": [
+        {
+          "text": "What animal is specifically mentioned as being affected by plastic?",
+          "choices": [
+            "Whales",
+            "Dolphins",
+            "Sea turtles",
+            "Sharks"
+          ],
+          "answer": "Sea turtles"
+        },
+        {
+          "text": "What do sea turtles confuse plastic with?",
+          "choices": [
+            "Fish",
+            "Jellyfish",
+            "Plankton",
+            "Seaweed"
+          ],
+          "answer": "Jellyfish"
+        }
+      ]
+    },
+    {
+      "passage": "Urban farming is becoming increasingly popular as cities look for ways to produce food locally. Rooftop gardens, hydroponics, and vertical farming are some of the innovative techniques being used to grow vegetables in urban environments.",
+      "questions": [
+        {
+          "text": "Where is urban farming typically practiced?",
+          "choices": [
+            "In rural fields",
+            "In shopping malls",
+            "On rooftops",
+            "In deserts"
+          ],
+          "answer": "On rooftops"
+        },
+        {
+          "text": "Which method is NOT mentioned in the passage?",
+          "choices": [
+            "Vertical farming",
+            "Hydroponics",
+            "Rooftop gardens",
+            "Greenhouses"
+          ],
+          "answer": "Greenhouses"
+        }
+      ]
+    },
+    {
+      "passage": "The Industrial Revolution marked a major turning point in history. It brought about the mechanization of production, rapid urbanization, and significant social changes. While it led to economic growth, it also created harsh working conditions in factories.",
+      "questions": [
+        {
+          "text": "What was one outcome of the Industrial Revolution?",
+          "choices": [
+            "Decreased urbanization",
+            "Manual agriculture",
+            "Mechanization of production",
+            "Global peace"
+          ],
+          "answer": "Mechanization of production"
+        },
+        {
+          "text": "What negative effect is mentioned?",
+          "choices": [
+            "More free time",
+            "Fewer cities",
+            "Factory working conditions",
+            "Better education"
+          ],
+          "answer": "Factory working conditions"
+        }
+      ]
+    }
+  ],
+  "long_passages": [
+    {
+      "passage": "Climate change is a complex issue influenced by natural and human factors. Scientists agree that human activities, particularly the burning of fossil fuels, are accelerating global warming. Changes in weather patterns, more extreme weather events, and rising sea levels are among the predicted consequences. Addressing this challenge requires global cooperation and sustainable practices.",
+      "questions": [
+        {
+          "text": "What is the main cause of accelerated global warming?",
+          "choices": [
+            "Volcanic eruptions",
+            "Solar activity",
+            "Human activities",
+            "Animal migration"
+          ],
+          "answer": "Human activities"
+        },
+        {
+          "text": "Which of the following is a consequence of climate change?",
+          "choices": [
+            "More rainfall in deserts",
+            "Decreased biodiversity",
+            "Falling sea levels",
+            "Stable temperatures"
+          ],
+          "answer": "Decreased biodiversity"
+        },
+        {
+          "text": "What is necessary to address climate change?",
+          "choices": [
+            "Government isolation",
+            "More technology exports",
+            "Global cooperation",
+            "Economic sanctions"
+          ],
+          "answer": "Global cooperation"
+        },
+        {
+          "text": "How do scientists view human impact on climate change?",
+          "choices": [
+            "As insignificant",
+            "As the primary driver",
+            "As completely avoidable",
+            "As unpredictable"
+          ],
+          "answer": "As the primary driver"
+        }
+      ]
+    },
+    {
+      "passage": "Artificial Intelligence (AI) is revolutionizing many industries, from healthcare to transportation. In healthcare, AI can analyze patient data to assist in diagnosis and recommend treatment plans. In transportation, self-driving cars are being developed using AI algorithms. Despite its benefits, AI raises ethical questions about privacy and job displacement.",
+      "questions": [
+        {
+          "text": "What is one application of AI in healthcare?",
+          "choices": [
+            "Surgery robots only",
+            "Medical tourism",
+            "Patient data analysis",
+            "Hospital construction"
+          ],
+          "answer": "Patient data analysis"
+        },
+        {
+          "text": "How is AI used in transportation?",
+          "choices": [
+            "Building roads",
+            "Designing airplanes",
+            "Creating maps",
+            "Self-driving cars"
+          ],
+          "answer": "Self-driving cars"
+        },
+        {
+          "text": "What is one concern about AI?",
+          "choices": [
+            "Increased salaries",
+            "Fewer patients",
+            "Privacy issues",
+            "Higher taxes"
+          ],
+          "answer": "Privacy issues"
+        },
+        {
+          "text": "What is the tone of the passage regarding AI?",
+          "choices": [
+            "Completely negative",
+            "Balanced and informative",
+            "Overly optimistic",
+            "Dismissive"
+          ],
+          "answer": "Balanced and informative"
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,13 @@
   <div>
     <h2>Reading Section</h2>
     <p><em>Time left: {{ TIME_LIMIT - timer }}s</em></p>
+
+    <!-- Passage Display -->
+    <div v-if="currentPassage" class="mt-4 mb-4">
+      <p>{{ currentPassage.passage }}</p>
+    </div>
+
+    <!-- Question Display -->
     <div v-if="currentQuestion">
       <p><strong>Q{{ currentIndex + 1 }}:</strong> {{ currentQuestion.text }}</p>
       <ul>
@@ -19,6 +26,7 @@
       <p>You scored {{ score }}/{{ questions.length }}</p>
       <p>Average Time: {{ averageTime.toFixed(2) }}s/question</p>
       <p>Weighted Score: {{ weightedScoreValue.toFixed(2) }}/{{ questions.length }}</p>
+      <p>Estimated Level: <strong>{{ estimatedLevel }}</strong></p>
     </div>
   </div>
 </template>
@@ -26,12 +34,17 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import type { Ref } from 'vue';
-import type { Question } from '../types/quiz';
+import type { QuestionSet, Question } from '../types/quiz';
 
 export default defineComponent({
   name: 'ReadingQuiz',
   setup() {
-    const questions: Ref<Question[]> = ref([]);
+    const standalone = ref<Question[]>([]);
+    const passages = ref<QuestionSet[]>([]);
+    const longPassages = ref<QuestionSet[]>([]);
+
+    const allQuestions: Ref<{ passage: string | null; question: Question }[]> = ref([]);
+
     const currentIndex = ref(0);
     const userAnswer = ref('');
     const score = ref(0);
@@ -43,7 +56,10 @@ export default defineComponent({
     const timeout = ref(false);
     const TIME_LIMIT = 25;
 
-    const currentQuestion = computed(() => questions.value[currentIndex.value]);
+    const currentItem = computed(() => allQuestions.value[currentIndex.value]);
+    const currentQuestion = computed(() => currentItem.value?.question);
+    const currentPassage = computed(() => currentItem.value);
+    const totalQuestions = computed(() => allQuestions.value.length);
 
     const startTimer = () => {
       timer.value = 0;
@@ -74,7 +90,7 @@ export default defineComponent({
         weightedScoreValue.value += 0.5 + 0.5 * speedWeight;
       }
 
-      if (currentIndex.value + 1 < questions.value.length) {
+      if (currentIndex.value + 1 < totalQuestions.value) {
         currentIndex.value++;
         userAnswer.value = '';
         startTimer();
@@ -88,20 +104,42 @@ export default defineComponent({
       return timePerQuestion.reduce((a, b) => a + b, 0) / timePerQuestion.length;
     });
 
+    const estimatedLevel = computed(() => {
+      const ratio = weightedScoreValue.value / totalQuestions.value;
+      const avgTime = averageTime.value;
+      const fullScore = score.value === totalQuestions.value;
+
+      if (fullScore && avgTime < 9 && ratio >= 0.9) return 'C2';
+      if (ratio >= 0.9) return 'C1';
+      if (ratio >= 0.75) return 'B2';
+      if (ratio >= 0.6) return 'B1';
+      if (ratio >= 0.4) return 'A2';
+      return 'A1';
+    })
+
     onMounted(async () => {
       const res = await fetch('/questions/reading.json');
       const data = await res.json();
-      questions.value = data;
+      standalone.value = data.standalone;
+      passages.value = data.passages;
+      longPassages.value = data.long_passages;
+
+      const flatQuestions: { passage: string | null; question: Question }[] = [];
+      standalone.value.forEach(q => flatQuestions.push({ passage: null, question: q }));
+      passages.value.forEach(set => set.questions.forEach(q => flatQuestions.push({ passage: set.passage, question: q })));
+      longPassages.value.forEach(set => set.questions.forEach(q => flatQuestions.push({ passage: set.passage, question: q })));
+      allQuestions.value = flatQuestions;
       startTimer();
     })
 
     return {
-      questions,
       currentQuestion,
+      currentPassage,
       currentIndex,
       userAnswer,
       score,
       weightedScoreValue,
+      estimatedLevel,
       finished,
       timer,
       averageTime,
@@ -114,6 +152,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.mt-4 {
+  margin-top: 1rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
 ul {
   list-style: none;
   padding-left: 0;
