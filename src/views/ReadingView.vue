@@ -18,6 +18,7 @@
     <div v-if="finished">
       <p>You scored {{ score }}/{{ questions.length }}</p>
       <p>Average Time: {{ averageTime.toFixed(2) }}s/question</p>
+      <p>Weighted Score: {{ weightedScoreValue.toFixed(2) }}/{{ questions.length }}</p>
     </div>
   </div>
 </template>
@@ -34,6 +35,7 @@ export default defineComponent({
     const currentIndex = ref(0);
     const userAnswer = ref('');
     const score = ref(0);
+    const weightedScoreValue = ref(0);
     const finished = ref(false);
     const timer = ref(0);
     const timerInterval = ref<number | null>(null);
@@ -45,6 +47,7 @@ export default defineComponent({
 
     const startTimer = () => {
       timer.value = 0;
+      timeout.value = false;
       timerInterval.value = setInterval(() => {
         timer.value++;
         if (timer.value >= TIME_LIMIT) {
@@ -52,7 +55,7 @@ export default defineComponent({
           stopTimer();
         }
       }, 1000);
-    }
+    };
 
     const stopTimer = () => {
       if (timerInterval.value !== null) {
@@ -60,28 +63,30 @@ export default defineComponent({
         timerInterval.value = null;
         timePerQuestion.push(Math.min(timer.value, TIME_LIMIT));
       }
-    }
+    };
 
     const next = () => {
       stopTimer();
+      const timeTaken = Math.min(timer.value, TIME_LIMIT);
+      const speedWeight = (TIME_LIMIT - timeTaken) / TIME_LIMIT; // 0.0〜1.0
       if (userAnswer.value === currentQuestion.value.answer) {
         score.value++;
+        weightedScoreValue.value += 0.5 + 0.5 * speedWeight;
       }
 
       if (currentIndex.value + 1 < questions.value.length) {
         currentIndex.value++;
         userAnswer.value = '';
-        timeout.value = false;
         startTimer();
       } else {
         finished.value = true;
       }
-    }
+    };
 
     const averageTime = computed(() => {
       if (timePerQuestion.length === 0) return 0;
       return timePerQuestion.reduce((a, b) => a + b, 0) / timePerQuestion.length;
-    })
+    });
 
     onMounted(async () => {
       const res = await fetch('/questions/reading.json');
@@ -96,6 +101,7 @@ export default defineComponent({
       currentIndex,
       userAnswer,
       score,
+      weightedScoreValue,
       finished,
       timer,
       averageTime,
