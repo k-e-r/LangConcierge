@@ -1,0 +1,22 @@
+[
+  {
+    "text": "Choose the correct sentence:",
+    "choices": [
+      "He don’t like pizza.",
+      "He doesn’t likes pizza.",
+      "He doesn’t like pizza.",
+      "He not likes pizza."
+    ],
+    "answer": "He doesn’t like pizza."
+  },
+  {
+    "text": "The manager asked us to __ the new system before next Monday.",
+    "choices": [
+      "review",
+      "cancel",
+      "repair",
+      "ignore"
+    ],
+    "answer": "review"
+  }
+]
