@@ -1,47 +1,37 @@
 <template>
   <div>
-    <h2>Reading Section</h2>
-    <p><em>Time left: {{ TIME_LIMIT - timer }}s</em></p>
-
-    <!-- Passage Display -->
-    <div v-if="currentPassage" class="mt-4 mb-4">
-      <p>{{ currentPassage.passage }}</p>
-    </div>
-
-    <!-- Question Display -->
-    <div v-if="currentQuestion">
-      <p><strong>Q{{ currentIndex + 1 }}:</strong> {{ currentQuestion.text }}</p>
-      <ul>
-        <li v-for="(choice, i) in currentQuestion.choices" :key="i">
-          <label>
-            <input type="radio" :name="'q' + currentIndex" :value="choice" v-model="userAnswer" :disabled="finished || timeout" />
-            {{ choice }}
-          </label>
-        </li>
-      </ul>
-    </div>
-
-    <button @click="next" :disabled="!userAnswer && !timeout || finished">Next</button>
-    <div v-if="finished">
-      <p>You scored {{ score }}/{{ questions.length }}</p>
-      <p>Average Time: {{ averageTime.toFixed(2) }}s/question</p>
-      <p>Weighted Score: {{ weightedScoreValue.toFixed(2) }}/{{ questions.length }}</p>
-      <p>Estimated Level: <strong>{{ estimatedLevel }}</strong></p>
-    </div>
+    <ReadingQuiz
+      :current-question="currentQuestion"
+      :current-passage="currentPassage"
+      :current-index="currentIndex"
+      :user-answer="userAnswer"
+      :score="score"
+      :weighted-score-value="weightedScoreValue"
+      :estimated-level="estimatedLevel"
+      :finished="finished"
+      :timer="timer"
+      :average-time="averageTime"
+      :timeout="timeout"
+      :TIME-LIMIT="TIME_LIMIT"
+      :total-questions="totalQuestions"
+      @next="next"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue';
+import ReadingQuiz from '@/components/ReadingQuiz.vue';
 import type { Ref } from 'vue';
-import type { QuestionSet, Question } from '../types/quiz';
+import type { QuestionSet, Question } from '@/types/quiz';
 
 export default defineComponent({
-  name: 'ReadingQuiz',
+  name: 'ReadingView',
+  components: { ReadingQuiz },
   setup() {
-    const standalone = ref<Question[]>([]);
-    const passages = ref<QuestionSet[]>([]);
-    const longPassages = ref<QuestionSet[]>([]);
+    const standalone = ref < Question[] > ([]);
+    const passages = ref < QuestionSet[] > ([]);
+    const longPassages = ref < QuestionSet[] > ([]);
 
     const allQuestions: Ref<{ passage: string | null; question: Question }[]> = ref([]);
 
@@ -51,14 +41,14 @@ export default defineComponent({
     const weightedScoreValue = ref(0);
     const finished = ref(false);
     const timer = ref(0);
-    const timerInterval = ref<number | null>(null);
+    const timerInterval: Ref<ReturnType<typeof setInterval> | null> = ref(null);
     const timePerQuestion: number[] = [];
     const timeout = ref(false);
     const TIME_LIMIT = 25;
 
     const currentItem = computed(() => allQuestions.value[currentIndex.value]);
-    const currentQuestion = computed(() => currentItem.value?.question);
-    const currentPassage = computed(() => currentItem.value);
+    const currentQuestion = computed(() => currentItem.value?.question ?? null);
+    const currentPassage = computed(() => currentItem.value ?? null);
     const totalQuestions = computed(() => allQuestions.value.length);
 
     const startTimer = () => {
@@ -84,7 +74,7 @@ export default defineComponent({
     const next = () => {
       stopTimer();
       const timeTaken = Math.min(timer.value, TIME_LIMIT);
-      const speedWeight = (TIME_LIMIT - timeTaken) / TIME_LIMIT; // 0.0〜1.0
+      const speedWeight = (TIME_LIMIT - timeTaken) / TIME_LIMIT;
       if (userAnswer.value === currentQuestion.value.answer) {
         score.value++;
         weightedScoreValue.value += 0.5 + 0.5 * speedWeight;
@@ -105,32 +95,32 @@ export default defineComponent({
     });
 
     const estimatedLevel = computed(() => {
-      const ratio = weightedScoreValue.value / totalQuestions.value;
+      const ratio = (score.value + weightedScoreValue.value) / totalQuestions.value;
       const avgTime = averageTime.value;
       const fullScore = score.value === totalQuestions.value;
 
       if (fullScore && avgTime < 9 && ratio >= 0.9) return 'C2';
       if (ratio >= 0.9) return 'C1';
-      if (ratio >= 0.75) return 'B2';
-      if (ratio >= 0.6) return 'B1';
-      if (ratio >= 0.4) return 'A2';
+      if (ratio >= 0.85) return 'B2';
+      if (ratio >= 0.8) return 'B1';
+      if (ratio >= 0.78) return 'A2';
       return 'A1';
-    })
+    });
 
     onMounted(async () => {
       const res = await fetch('/questions/reading.json');
       const data = await res.json();
       standalone.value = data.standalone;
-      passages.value = data.passages;
+      passages.value = data.passage;
       longPassages.value = data.long_passages;
 
       const flatQuestions: { passage: string | null; question: Question }[] = [];
       standalone.value.forEach(q => flatQuestions.push({ passage: null, question: q }));
-      passages.value.forEach(set => set.questions.forEach(q => flatQuestions.push({ passage: set.passage, question: q })));
+      passages.value?.forEach(set => set.questions.forEach(q => flatQuestions.push({ passage: set.passage, question: q })));
       longPassages.value.forEach(set => set.questions.forEach(q => flatQuestions.push({ passage: set.passage, question: q })));
       allQuestions.value = flatQuestions;
       startTimer();
-    })
+    });
 
     return {
       currentQuestion,
@@ -145,27 +135,11 @@ export default defineComponent({
       averageTime,
       timeout,
       TIME_LIMIT,
+      totalQuestions,
+      startTimer,
+      stopTimer,
       next
     }
   }
-})
+});
 </script>
-
-<style scoped>
-.mt-4 {
-  margin-top: 1rem;
-}
-.mb-4 {
-  margin-bottom: 1rem;
-}
-ul {
-  list-style: none;
-  padding-left: 0;
-}
-li {
-  margin: 0.5em 0;
-}
-button {
-  margin-top: 1em;
-}
-</style>
