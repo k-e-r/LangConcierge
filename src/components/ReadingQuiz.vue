@@ -30,8 +30,6 @@ const props = defineProps<ReadingQuizProps>();
     <button @click="$emit('next')" :disabled="!props.userAnswer && !props.timeout || props.finished">
       <div v-if="props.finished">
         <p>You scored {{ props.score }}/{{ props.totalQuestions }}</p>
-        <p>Average Time: {{ props.averageTime.toFixed(2) }}s/question</p>
-        <p>Weighted Score: {{ props.weightedScoreValue.toFixed(2) }}/{{ props.totalQuestions }}</p>
         <p>Estimated Level: <strong>{{ props.estimatedLevel }}</strong></p>
       </div>
     </button>

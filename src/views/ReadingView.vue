@@ -6,11 +6,9 @@
       :current-index="currentIndex"
       :user-answer="userAnswer"
       :score="score"
-      :weighted-score-value="weightedScoreValue"
       :estimated-level="estimatedLevel"
       :finished="finished"
       :timer="timer"
-      :average-time="averageTime"
       :timeout="timeout"
       :TIME-LIMIT="TIME_LIMIT"
       :total-questions="totalQuestions"
@@ -38,7 +36,6 @@ export default defineComponent({
     const currentIndex = ref(0);
     const userAnswer = ref('');
     const score = ref(0);
-    const weightedScoreValue = ref(0);
     const finished = ref(false);
     const timer = ref(0);
     const timerInterval: Ref<ReturnType<typeof setInterval> | null> = ref(null);
@@ -76,8 +73,8 @@ export default defineComponent({
       const timeTaken = Math.min(timer.value, TIME_LIMIT);
       const speedWeight = (TIME_LIMIT - timeTaken) / TIME_LIMIT;
       if (userAnswer.value === currentQuestion.value.answer) {
+        // if (speedWeight >= 0.4) score.value++;
         score.value++;
-        weightedScoreValue.value += 0.5 + 0.5 * speedWeight;
       }
 
       if (currentIndex.value + 1 < totalQuestions.value) {
@@ -89,21 +86,14 @@ export default defineComponent({
       }
     };
 
-    const averageTime = computed(() => {
-      if (timePerQuestion.length === 0) return 0;
-      return timePerQuestion.reduce((a, b) => a + b, 0) / timePerQuestion.length;
-    });
-
     const estimatedLevel = computed(() => {
-      const ratio = (score.value + weightedScoreValue.value) / totalQuestions.value;
-      const avgTime = averageTime.value;
-      const fullScore = score.value === totalQuestions.value;
+      const ratio = score.value / totalQuestions.value;
 
-      if (fullScore && avgTime < 9 && ratio >= 0.9) return 'C2';
-      if (ratio >= 0.9) return 'C1';
-      if (ratio >= 0.85) return 'B2';
-      if (ratio >= 0.8) return 'B1';
-      if (ratio >= 0.78) return 'A2';
+      if (ratio >= 0.9) return 'C2';
+      if (ratio >= 0.8) return 'C1';
+      if (ratio >= 0.7) return 'B2';
+      if (ratio >= 0.5) return 'B1';
+      if (ratio >= 0.4) return 'A2';
       return 'A1';
     });
 
@@ -128,16 +118,15 @@ export default defineComponent({
       currentIndex,
       userAnswer,
       score,
-      weightedScoreValue,
       estimatedLevel,
       finished,
       timer,
-      averageTime,
       timeout,
       TIME_LIMIT,
       totalQuestions,
       startTimer,
       stopTimer,
+      allQuestions,
       next
     }
   }
