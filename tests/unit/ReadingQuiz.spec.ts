@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import ReadingQuiz from '../ReadingQuiz.vue';
+import ReadingQuiz from '../../src/components/ReadingQuiz.vue';
 import type { ReadingQuizProps } from '@/types/ReadingQuizProps';
 
 const baseProps: ReadingQuizProps = {
@@ -13,11 +13,9 @@ const baseProps: ReadingQuizProps = {
   currentIndex: 0,
   userAnswer: "",
   score: 0,
-  weightedScoreValue: 0,
   estimatedLevel: "A1",
   finished: false,
   timer: 0,
-  averageTime: 0,
   timeout: false,
   TIME_LIMIT: 25,
   totalQuestions: 1
@@ -44,8 +42,8 @@ describe('ReadingQuiz.vue', () => {
       props: {
         ...baseProps,
         score: 1,
-        weightedScoreValue: 1,
-        averageTime: 5,
+        timePerQuestion: 5,
+        estimatedLevel: "C2",
         finished: true
       }
     });

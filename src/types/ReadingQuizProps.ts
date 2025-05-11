@@ -6,11 +6,9 @@ export interface ReadingQuizProps {
   currentIndex: number;
   userAnswer: string;
   score: number;
-  weightedScoreValue: number;
   estimatedLevel: string;
   finished: boolean;
   timer: number;
-  averageTime: number;
   timeout: boolean;
   TIME_LIMIT: number;
   totalQuestions: number;
