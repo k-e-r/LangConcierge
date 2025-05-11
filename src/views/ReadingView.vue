@@ -1,17 +1,17 @@
 <template>
   <div>
     <ReadingQuiz
-      :current-question="currentQuestion"
-      :current-passage="currentPassage"
-      :current-index="currentIndex"
-      :user-answer="userAnswer"
+      :currentQuestion="currentQuestion"
+      :currentPassage="currentPassage"
+      :currentIndex="currentIndex"
+      v-model:userAnswer="userAnswer"
       :score="score"
-      :estimated-level="estimatedLevel"
+      :estimatedLevel="estimatedLevel"
       :finished="finished"
       :timer="timer"
       :timeout="timeout"
-      :TIME-LIMIT="TIME_LIMIT"
-      :total-questions="totalQuestions"
+      :TIME_LIMIT="TIME_LIMIT"
+      :totalQuestions="totalQuestions"
       @next="next"
     />
   </div>
@@ -101,7 +101,7 @@ export default defineComponent({
       const res = await fetch('/questions/reading.json');
       const data = await res.json();
       standalone.value = data.standalone;
-      passages.value = data.passage;
+      passages.value = data.passages;
       longPassages.value = data.long_passages;
 
       const flatQuestions: { passage: string | null; question: Question }[] = [];
