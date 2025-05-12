@@ -4,7 +4,7 @@ test('user can complete Reading section quiz', async ({ page }) => {
   await page.goto('http://localhost:5173')
 
   // Start screen (assume you have one)
-  await page.getByRole('link', { name: 'Reading' }).click()
+  await page.getByRole('button', { name: `Let's go!` }).click()
 
   // Go through all questions
   for (let i = 0; i < 23; i++) {
