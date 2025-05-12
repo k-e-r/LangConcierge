@@ -5,20 +5,23 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <nav>
+      <RouterLink to="/">Home</RouterLink>
+      <!-- <RouterLink to="/listening">Listening</RouterLink>
+      <RouterLink to="/reading">Reading</RouterLink> -->
+    </nav>
+    <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/listening">Listening</RouterLink>
-        <RouterLink to="/reading">Reading</RouterLink>
-      </nav>
+      <HelloWorld msg="English Test (L/R)" />
     </div>
   </header>
 
   <RouterView />
+
+  <footer>
+    <p>&copy;2025. Kaori Era. All Rights Reserved.</p>
+  </footer>
 </template>
 
 <style scoped>
@@ -35,8 +38,9 @@ header {
 nav {
   width: 100%;
   font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+  /* text-align: center; */
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 nav a.router-link-exact-active {
@@ -55,6 +59,14 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
+}
+
+footer {
+  color: #000;
+  font-size: .7rem;
+  padding: 2rem 0 0;
+  text-align: center;
+  width: 100%;
 }
 
 @media (min-width: 1024px) {

@@ -22,7 +22,7 @@
       </ul>
     </div>
 
-    <button @click="next" :disabled="!userAnswer && !timeout || finished">Next</button>
+    <button @click="next" :disabled="!userAnswer && !timeout || finished || isPlaying">Next</button>
     <div v-if="finished">
       <p>You scored {{ score }}/{{ questions.length }}</p>
       <p>Average Time: {{ averageTime.toFixed(2) }}s/question</p>
@@ -49,11 +49,14 @@ const timerInterval = ref<number | null>(null)
 const timePerQuestion: number[] = []
 const timeout = ref(false)
 const TIME_LIMIT = 25
+const isPlaying = ref(true)
 
 const currentQuestion = computed(() => questions.value[currentIndex.value])
 
 const speak = async (text: string, filename = 'q' + currentIndex.value + '.mp3') => {
   try {
+    isPlaying.value = true
+
     const res = await fetch('https://27giqipc4d.execute-api.us-east-2.amazonaws.com/speak', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -67,9 +70,11 @@ const speak = async (text: string, filename = 'q' + currentIndex.value + '.mp3')
     audio.play()
 
     audio.onended = () => {
+      isPlaying.value = false
       startTimer()
     }
   } catch (err) {
+    isPlaying.value = false
     console.error('Audio fetch/playback error:', err)
   }
 }
@@ -105,9 +110,7 @@ const next = () => {
   if (currentIndex.value + 1 < questions.value.length) {
     currentIndex.value++
     userAnswer.value = ''
-    setTimeout(() => {
-      speak(currentQuestion.value.audioText)
-    }, 2000)
+    speak(currentQuestion.value.audioText)
   } else {
     finished.value = true
   }
@@ -121,8 +124,8 @@ const averageTime = computed(() => {
 const estimatedLevel = computed(() => {
   const ratio = score.value / questions.value.length
   const avgTime = averageTime.value
-  if (ratio === 1 && avgTime < 9) return 'C2'
-  if (ratio >= 0.9) return 'C1'
+  if (ratio === 1 && avgTime < 3) return 'C2'
+  if (ratio >= 0.9 && avgTime < 6) return 'C1'
   if (ratio >= 0.75) return 'B2'
   if (ratio >= 0.6) return 'B1'
   if (ratio >= 0.4) return 'A2'

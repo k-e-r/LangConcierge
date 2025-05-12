@@ -41,7 +41,7 @@ export default defineComponent({
     const timerInterval: Ref<ReturnType<typeof setInterval> | null> = ref(null);
     const timePerQuestion: number[] = [];
     const timeout = ref(false);
-    const TIME_LIMIT = 25;
+    const TIME_LIMIT = 60;
 
     const currentItem = computed(() => allQuestions.value[currentIndex.value]);
     const currentQuestion = computed(() => currentItem.value?.question ?? null);

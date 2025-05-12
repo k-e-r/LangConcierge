@@ -1,17 +1,17 @@
 [
   {
-    "audioText": "Please note that the meeting starts at 10 AM sharp. Don't be late.",
+    "audioText": "One. Please note that the meeting starts at 10 AM sharp. Don't be late.",
     "text": "What does the speaker say about the meeting?",
     "choices": [
-      "It has been canceled.",
-      "It will be delayed.",
-      "It starts at 10 AM.",
-      "It is already over."
+      "It has been canceled",
+      "It will be delayed",
+      "It starts at 10 AM",
+      "It is already over"
     ],
     "answer": "It starts at 10 AM"
   },
   {
-    "audioText": "Excuse me, could you tell me where I can find a good restaurant nearby?",
+    "audioText": "Two. Excuse me, could you tell me where I can find a good restaurant nearby?",
     "text": "What is the woman looking for?",
     "choices": [
       "Her keys",
@@ -22,7 +22,7 @@
     "answer": "A restaurant"
   },
   {
-    "audioText": "Flight 305 is now boarding at gate 22. Please have your boarding passes ready.",
+    "audioText": "Three. Flight 305 is now boarding at gate 22. Please have your boarding passes ready.",
     "text": "Where is the conversation taking place?",
     "choices": [
       "In a classroom",
@@ -33,7 +33,7 @@
     "answer": "At an airport"
   },
   {
-    "audioText": "I\u2019ll send you an email with the updated details by this evening.",
+    "audioText": "Four. I\u2019ll send you an email with the updated details by this evening.",
     "text": "What will the man do next?",
     "choices": [
       "Call the manager",
@@ -44,7 +44,7 @@
     "answer": "Send an email"
   },
   {
-    "audioText": "Attention passengers. The 3:15 train to Toronto has been delayed by 20 minutes.",
+    "audioText": "Five. Attention passengers. The 3:15 train to Toronto has been delayed by 20 minutes.",
     "text": "What is the topic of the announcement?",
     "choices": [
       "Weather forecast",
