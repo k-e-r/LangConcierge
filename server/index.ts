@@ -1,4 +1,4 @@
-import 'dotenv/config'
+// import 'dotenv/config'
 import fs from 'fs'
 import path from 'path'
 import { PollyClient, SynthesizeSpeechCommand, VoiceId } from '@aws-sdk/client-polly'
@@ -12,9 +12,18 @@ interface LambdaEvent {
 interface LambdaResponse {
   statusCode: number
   body: string
+  headers?: { [key: string]: string }
 }
 
-const polly = new PollyClient({ region: 'us-east-2', credentials: fromNodeProviderChain() })
+const corsHeaders = () => ({
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': '*'
+})
+
+const polly = new PollyClient({
+  region: 'us-east-2',
+  credentials: fromNodeProviderChain()
+})
 
 export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
   const body = JSON.parse(event.body || '{}')
@@ -54,12 +63,13 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
   if (!bucket) {
     return {
       statusCode: 500,
+      headers: corsHeaders(),
       body: JSON.stringify({ error: 'Missing AUDIO_OUTPUT_BUCKET env var' })
     }
   }
 
   try {
-    const result = await uploadIfNotExists({
+    const { url } = await uploadIfNotExists({
       bucketName: bucket,
       fileKey: `audio/${filename}`,
       text,
@@ -68,12 +78,15 @@ export const handler = async (event: LambdaEvent): Promise<LambdaResponse> => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(result)
+      headers: corsHeaders(),
+      body: JSON.stringify({ url })
     }
   } catch (err: any) {
+    console.error(err)
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message || 'Unknown error' })
+      headers: corsHeaders(),
+      body: JSON.stringify({ message: err.message || 'Internal Server Error' })
     }
   }
 }

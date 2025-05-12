@@ -1,6 +1,17 @@
-import { HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import { OutputFormat, PollyClient, SynthesizeSpeechCommand, VoiceId } from '@aws-sdk/client-polly'
+import {
+  HeadObjectCommand,
+  PutObjectCommand,
+  GetObjectCommand,
+  S3Client
+} from '@aws-sdk/client-s3'
+import {
+  OutputFormat,
+  PollyClient,
+  SynthesizeSpeechCommand,
+  VoiceId
+} from '@aws-sdk/client-polly'
 import { fromNodeProviderChain } from '@aws-sdk/credential-providers'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 const s3 = new S3Client({
   region: 'us-east-2',
@@ -32,9 +43,19 @@ export const uploadIfNotExists = async ({
     await s3.send(new HeadObjectCommand({ Bucket: bucketName, Key: fileKey }))
     console.log(`File already exists: ${fileKey}`)
 
+    const signedUrl = await getSignedUrl(
+      s3,
+      new GetObjectCommand({
+        Bucket: bucketName,
+        Key: fileKey,
+        ResponseContentType: 'audio/mpeg'
+      }),
+      { expiresIn: 60 * 60 }
+    )
+
     return {
       status: 'skipped',
-      url: `https://${bucketName}.s3.amazonaws.com/${fileKey}`
+      url: signedUrl
     }
   } catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'name' in error && (error as any).name === 'NotFound') {
@@ -56,13 +77,22 @@ export const uploadIfNotExists = async ({
         Key: fileKey,
         Body: Buffer.from(arrayBuffer),
         ContentType: 'audio/mpeg',
-        ACL: 'public-read',
       }))
+
+      const signedUrl = await getSignedUrl(
+        s3,
+        new GetObjectCommand({
+          Bucket: bucketName,
+          Key: fileKey,
+          ResponseContentType: 'audio/mpeg'
+        }),
+        { expiresIn: 60 * 60 }
+      )
 
       console.log(`Uploaded new file: ${fileKey}`)
       return {
         status: 'uploaded',
-        url: `https://${bucketName}.s3.amazonaws.com/${fileKey}`
+        url: signedUrl
       }
     } else {
       throw error

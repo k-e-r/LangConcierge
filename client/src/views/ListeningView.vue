@@ -52,12 +52,25 @@ const TIME_LIMIT = 25
 
 const currentQuestion = computed(() => questions.value[currentIndex.value])
 
-const speak = (text: string) => {
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = 'en-US'
-  speechSynthesis.speak(utterance)
-  utterance.onend = () => {
-    startTimer()
+const speak = async (text: string, filename = 'q' + currentIndex.value + '.mp3') => {
+  try {
+    const res = await fetch('https://27giqipc4d.execute-api.us-east-2.amazonaws.com/speak', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, filename })
+    })
+
+    if (!res.ok) throw new Error('Failed to fetch audio')
+    const { url } = await res.json()
+
+    const audio = new Audio(url)
+    audio.play()
+
+    audio.onended = () => {
+      startTimer()
+    }
+  } catch (err) {
+    console.error('Audio fetch/playback error:', err)
   }
 }
 

@@ -137,3 +137,5 @@ dist
 
 # output file for tests
 audio/
+
+.DS_Store
