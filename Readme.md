@@ -2,8 +2,6 @@
 
 A TypeScript + AWS SDK v3 powered application to generate MP3 files from text using Amazon Polly, and optionally upload them to S3 or save locally. Designed to work both locally and as a Lambda function.
 
----
-
 ## Features
 
 - Text-to-Speech with Amazon Polly
@@ -12,8 +10,6 @@ A TypeScript + AWS SDK v3 powered application to generate MP3 files from text us
 - AWS SDK v3 + TypeScript
 - Client/server separation (Vue + Lambda)
 - Unit testing with Vitest, E2E testing with Playwright
-
----
 
 ## Project Structure
 
@@ -38,8 +34,6 @@ Project/
 
 > Note: The `audio/` directory is used only for local development. MP3s are generated from `client/questions/listening.json` and uploaded to S3 if not already present.
 
----
-
 ## Environment Variables
 
 Create a `.env` file inside `server/`:
@@ -52,8 +46,6 @@ LOCAL=true
 
 > `LOCAL=true` to save files locally instead of S3
 
----
-
 ## Local Development
 
 From `server/`:
@@ -64,8 +56,6 @@ npx ts-node index.ts
 ```
 
 MP3s will be saved to `./audio/`.
-
----
 
 ## Deploy to Lambda
 
@@ -87,8 +77,6 @@ aws lambda update-function-code \
   --function-name ttsUploader \
   --zip-file fileb://function.zip
 ```
-
----
 
 ## License
 
